@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ქრისტინე &amp; ლაშას — საქორწილო მოსაწვევი</title>
+  <meta name="description" <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
+    rel="stylesheet" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <style>
+    :root {
+      --cream: #faf6f0;
+      --parchment: #f2ead8;
+      --blush: #e8c5b5;
+      --rose: #c9927a;
+      --gold: #c9a96e;
+      --gold-light: #e2c98a;
+      --gold-dark: #a07840;
+      --deep-green: #2c4a3e;
+      --forest: #3d6b5a;
+      --text-dark: #2a2016;
+      --text-mid: #5a4a35;
+      --text-light: #8a7a60;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      overflow: hidden;
+      min-height: 100vh;
+    }
+
+    body.revealed {
+      overflow-y: auto;
+    }
+
+    /* Background */
+    .bg-texture {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(201, 169, 110, 0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 80%, rgba(232, 197, 181, 0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 60% 10%, rgba(44, 74, 62, 0.04) 0%, transparent 50%);
+      background-color: var(--cream);
+    }
+
+    .bg-texture::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    /* Envelope Scene */
+    #envelope-scene {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .click-hint {
+      position: absolute;
+      bottom: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-light);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 0.82rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .hint-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+
+    .dot:nth-child(2) {
+      animation-delay: 0.3s;
+    }
+
+    .dot:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 0.3;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 1;
+        transform: scale(1.4);
+      }
+    }
+
+    /* Envelope */
+    .envelope-wrapper {
+      position: relative;
+      width: min(420px, 90vw);
+      aspect-ratio: 420 / 300;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      filter: drop-shadow(0 30px 60px rgba(42, 32, 22, 0.18)) drop-shadow(0 8px 20px rgba(201, 169, 110, 0.35));
+    }
+
+    .env-body {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(145deg, #f5edd8, #ede0c4);
+      border-radius: 4px;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .env-body::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+    }
+
+    .env-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: calc(min(420px, 90vw) / 2) solid transparent;
+      border-right: calc(min(420px, 90vw) / 2) solid transparent;
+      border-bottom: calc(min(420px, 90vw) * 300 / 420 * 0.45) solid #ddd0b0;
+      z-index: 2;
+    }
+
+    .env-left {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: calc(min(420px, 90vw) * 300 / 420 * 0.5) solid transparent;
+      border-bottom: calc(min(420px, 90vw) * 300 / 420 * 0.5) solid transparent;
+      border-left: calc(min(420px, 90vw) * 0.45) solid #cfc0a0;
+      z-index: 3;
+    }
+
+    .env-right {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 0;
+      height: 0;
+      border-top: calc(min(420px, 90vw) * 300 / 420 * 0.5) solid transparent;
+      border-bottom: calc(min(420px, 90vw) * 300 / 420 * 0.5) solid transparent;
+      border-right: calc(min(420px, 90vw) * 0.45) solid #d5c6a8;
+      z-index: 3;
+    }
+
+    .env-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50%;
+      z-index: 5;
+      transform-origin: top center;
+      transform-style: preserve-3d;
+    }
+
+    .env-flap-inner {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .env-flap-shape {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-left: calc(min(420px, 90vw) / 2) solid transparent;
+      border-right: calc(min(420px, 90vw) / 2) solid transparent;
+      border-top: calc(min(420px, 90vw) * 300 / 420 * 0.48) solid #e8dcc0;
+      filter: brightness(0.95);
+    }
+
+    /* Wax Seal */
+    .wax-seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 6;
+      width: 72px;
+      height: 72px;
+    }
+
+    .wax-seal svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 12px rgba(150, 80, 60, 0.45));
+    }
+
+    .seal-pulse {
+      animation: seal-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes seal-glow {
+
+      0%,
+      100% {
+        filter: drop-shadow(0 4px 12px rgba(150, 80, 60, 0.45));
+      }
+
+      50% {
+        filter: drop-shadow(0 4px 20px rgba(150, 80, 60, 0.75)) drop-shadow(0 0 30px rgba(201, 169, 110, 0.3));
+      }
+    }
+
+    /* Invitation Card */
+    #invitation-card {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      opacity: 0;
+      visibility: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      background: transparent;
+    }
+
+    #invitation-card.active {
+      visibility: visible;
+    }
+
+    .card-inner {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px 80px;
+    }
+
+    .card-panel {
+      width: min(680px, 100%);
+      background: linear-gradient(160deg, #fdfaf5 0%, #faf4e8 50%, #f6edd8 100%);
+      border-radius: 2px;
+      box-shadow:
+        0 0 0 1px rgba(201, 169, 110, 0.15),
+        0 0 0 8px rgba(201, 169, 110, 0.06),
+        0 0 0 9px rgba(201, 169, 110, 0.12),
+        0 40px 80px rgba(42, 32, 22, 0.18),
+        0 10px 30px rgba(201, 169, 110, 0.15);
+      overflow: hidden;
+      position: relative;
+      transform: scale(0.5) translateY(60px);
+    }
+
+    .card-panel::before {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(201, 169, 110, 0.35);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .card-panel::after {
+      content: '';
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(201, 169, 110, 0.18);
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Card Header */
+    .card-header {
+      padding: 60px 48px 40px;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(201, 169, 110, 0.06) 0%, transparent 100%);
+    }
+
+    .header-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.75rem, 2vw, 0.9rem);
+      font-weight: 300;
+      font-style: italic;
+      letter-spacing: 0.25em;
+      color: var(--text-light);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .header-monogram {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 10vw, 5rem);
+      font-weight: 400;
+      color: var(--gold);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+
+    .couple-names {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 6vw, 3.5rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--deep-green);
+      line-height: 1.1;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      white-space: nowrap;
+    }
+
+    .couple-names .name-gold {
+      color: var(--gold-dark);
+    }
+
+    .ampersand {
+      font-size: 1.2em;
+      color: var(--rose);
+      font-style: normal;
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin: 28px auto 0;
+    }
+
+    .ornament-line {
+      height: 1px;
+      width: 80px;
+      background: linear-gradient(90deg, transparent, var(--gold));
+    }
+
+    .ornament-line.right {
+      background: linear-gradient(90deg, var(--gold), transparent);
+    }
+
+    .ornament-icon {
+      color: var(--gold);
+      font-size: 1.1rem;
+      line-height: 1;
+    }
+
+    /* Guest Message Section */
+    .guest-message-section {
+      background: linear-gradient(135deg, rgba(44, 74, 62, 0.04) 0%, rgba(201, 169, 110, 0.08) 100%);
+      border: 1px solid rgba(201, 169, 110, 0.35);
+      border-radius: 2px;
+      padding: 36px 28px;
+      margin: 0 auto 40px;
+      max-width: 520px;
+      position: relative;
+      text-align: center;
+      box-shadow: inset 0 0 20px rgba(201, 169, 110, 0.05), 0 8px 25px rgba(42, 32, 22, 0.03);
+    }
+
+    .guest-message-section::before {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 1px solid rgba(201, 169, 110, 0.2);
+      pointer-events: none;
+    }
+
+    .message-ornament {
+      font-size: 1.2rem;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+
+    .message-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.35rem, 3.8vw, 1.75rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--gold-dark);
+      margin-bottom: 16px;
+      letter-spacing: 0.02em;
+    }
+
+    .message-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2.4vw, 1.18rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--text-dark);
+      line-height: 1.85;
+    }
+
+    /* Intro Section Styling */
+    .intro-section {
+      margin: 0 auto 40px;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+
+    .intro-ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .intro-ornament .line {
+      height: 1px;
+      width: 50px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .intro-ornament .symbol {
+      color: var(--gold);
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    .intro-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 3vw, 1.4rem);
+      font-weight: 500;
+      font-style: italic;
+      color: var(--deep-green);
+      line-height: 1.8;
+      letter-spacing: 0.02em;
+    }
+
+    /* Card Body */
+    .card-body {
+      padding: 40px 48px 56px;
+      text-align: center;
+    }
+
+    .invite-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.05rem, 2.8vw, 1.25rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.8;
+      margin-bottom: 48px;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .details-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px 24px;
+      margin-bottom: 48px;
+    }
+
+    .detail-block:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 500px) {
+      .details-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .card-header,
+      .card-body {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      .picture-section {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+
+      .location-section {
+        padding: 48px 28px;
+      }
+
+      .card-footer {
+        padding-left: 28px;
+        padding-right: 28px;
+      }
+    }
+
+    .detail-block {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 24px 20px;
+      background: rgba(201, 169, 110, 0.04);
+      border: 1px solid rgba(201, 169, 110, 0.15);
+      border-radius: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detail-block::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    }
+
+    .detail-label {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+    }
+
+    .detail-icon {
+      font-size: 1.4rem;
+      margin-bottom: 2px;
+    }
+
+    .detail-value {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      font-weight: 500;
+      color: var(--deep-green);
+      line-height: 1.4;
+    }
+
+    .detail-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.82rem, 1.8vw, 0.92rem);
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    .btn-save-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, var(--deep-green) 0%, var(--forest) 100%);
+      color: var(--gold-light);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 1px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 8px 30px rgba(44, 74, 62, 0.3), 0 0 0 1px rgba(201, 169, 110, 0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-save-date::before {
+      content: '';
+      position: absolute;
+      inset: 1px;
+      border: 1px solid rgba(201, 169, 110, 0.25);
+      pointer-events: none;
+    }
+
+    .btn-save-date::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-save-date:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(44, 74, 62, 0.4), 0 0 0 1px rgba(201, 169, 110, 0.3);
+    }
+
+    .btn-save-date:hover::after {
+      left: 100%;
+    }
+
+    /* Floral Divider */
+    .floral-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 48px;
+    }
+
+    .floral-divider svg {
+      width: 100%;
+      max-width: 340px;
+      color: var(--gold);
+      opacity: 0.5;
+    }
+
+    /* Picture Section */
+    .picture-section {
+      width: 100%;
+      padding: 0 48px 40px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .picture-frame {
+      width: 100%;
+      max-width: 440px;
+      aspect-ratio: 4 / 5;
+      padding: 12px;
+      background: linear-gradient(145deg, #fdfaf5, #f5edd8);
+      border: 1px solid var(--gold);
+      border-radius: 4px;
+      box-shadow:
+        0 15px 35px rgba(42, 32, 22, 0.15),
+        0 0 0 4px rgba(201, 169, 110, 0.12),
+        0 0 0 5px rgba(201, 169, 110, 0.25);
+      position: relative;
+    }
+
+    .picture-frame-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(201, 169, 110, 0.4);
+    }
+
+    .picture-frame-inner::after {
+      content: '';
+      position: absolute;
+      inset: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.12);
+      pointer-events: none;
+    }
+
+    .frame-corner {
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .frame-corner.top-left {
+      top: 5px;
+      left: 5px;
+      border-top: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+    }
+
+    .frame-corner.top-right {
+      top: 5px;
+      right: 5px;
+      border-top: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+
+    .frame-corner.bottom-left {
+      bottom: 5px;
+      left: 5px;
+      border-bottom: 2px solid var(--gold);
+      border-left: 2px solid var(--gold);
+    }
+
+    .frame-corner.bottom-right {
+      bottom: 5px;
+      right: 5px;
+      border-bottom: 2px solid var(--gold);
+      border-right: 2px solid var(--gold);
+    }
+
+    .picture-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Location Section */
+    .location-section {
+      background: linear-gradient(160deg, var(--deep-green) 0%, #1a3a2e 100%);
+      padding: 64px 48px;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .location-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 0%, rgba(201, 169, 110, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 100%, rgba(201, 169, 110, 0.06) 0%, transparent 50%);
+    }
+
+    .location-section::after {
+      content: '';
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(201, 169, 110, 0.15);
+      pointer-events: none;
+    }
+
+    .location-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 2.8rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold-light);
+      margin-bottom: 8px;
+      position: relative;
+    }
+
+    .location-subtitle {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.85rem, 2vw, 1rem);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(226, 201, 138, 0.6);
+      letter-spacing: 0.12em;
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .map-container {
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto 32px;
+      aspect-ratio: 16 / 9;
+      border-radius: 2px;
+      overflow: hidden;
+      border: 1px solid rgba(201, 169, 110, 0.25);
+      position: relative;
+    }
+
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .btn-map {
+      display: inline-block;
+      width: 100%;
+      max-width: 440px;
+      padding: 18px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--deep-green);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 1px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-map::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn-map:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn-map:hover::after {
+      left: 100%;
+    }
+
+    /* Card Footer */
+    .card-footer {
+      padding: 40px 48px;
+      text-align: center;
+      background: linear-gradient(0deg, rgba(201, 169, 110, 0.05) 0%, transparent 100%);
+    }
+
+    .footer-verse {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.9;
+      max-width: 380px;
+      margin: 0 auto 24px;
+    }
+
+    .footer-names {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 3vw, 1.4rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--gold-dark);
+    }
+
+    /* Scroll indicator */
+    .scroll-indicator {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      opacity: 0;
+      pointer-events: none;
+      color: var(--text-light);
+    }
+
+    .scroll-indicator span {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-arrow {
+      width: 20px;
+      height: 20px;
+      border-right: 1.5px solid var(--gold);
+      border-bottom: 1.5px solid var(--gold);
+      transform: rotate(45deg);
+      animation: scroll-bounce 1.5s ease-in-out infinite;
+    }
+
+    @keyframes scroll-bounce {
+
+      0%,
+      100% {
+        transform: rotate(45deg) translateY(0);
+        opacity: 1;
+      }
+
+      50% {
+        transform: rotate(45deg) translateY(5px);
+        opacity: 0.5;
+      }
+    }
+
+    .animate-in {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .sparkle {
+      position: fixed;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-texture" aria-hidden="true"></div>
+
+  <!-- ENVELOPE SCENE -->
+  <div id="envelope-scene" role="button" aria-label="Click to open your invitation" tabindex="0">
+    <div class="envelope-wrapper" id="envelope-wrapper">
+      <div class="envelope" id="envelope">
+        <div class="env-body" id="env-body">
+          <svg style="position:absolute;inset:0;width:100%;height:100%;opacity:0.07" viewBox="0 0 100 100"
+            preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <pattern id="lining-pattern" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+                <path d="M7 1 L13 7 L7 13 L1 7 Z" fill="none" stroke="#a07840" stroke-width="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#lining-pattern)" />
+          </svg>
+        </div>
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+        <div class="env-bottom"></div>
+        <div class="env-flap" id="env-flap">
+          <div class="env-flap-inner">
+            <div class="env-flap-shape"></div>
+          </div>
+        </div>
+        <div class="wax-seal seal-pulse" id="wax-seal">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="seal-grad" cx="40%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#c0614a" />
+                <stop offset="50%" stop-color="#a0402e" />
+                <stop offset="100%" stop-color="#7a2a1a" />
+              </radialGradient>
+              <filter id="seal-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="1" dy="3" stdDeviation="3" flood-color="rgba(80,20,10,0.5)" />
+              </filter>
+            </defs>
+            <circle cx="50" cy="50" r="46" fill="url(#seal-grad)" filter="url(#seal-shadow)" />
+            <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,200,150,0.25)" stroke-width="1.5" />
+            <g fill="rgba(255,200,150,0.18)" transform="translate(50,50)">
+              <ellipse rx="4" ry="20" transform="rotate(0)" />
+              <ellipse rx="4" ry="20" transform="rotate(45)" />
+              <ellipse rx="4" ry="20" transform="rotate(90)" />
+              <ellipse rx="4" ry="20" transform="rotate(135)" />
+            </g>
+            <text x="50" y="56" text-anchor="middle" font-family="serif" font-size="22" font-weight="700"
+              fill="rgba(255,220,170,0.9)" letter-spacing="1">ქꨄ︎ლ</text>
+            <g fill="rgba(255,200,150,0.4)">
+              <circle cx="50" cy="8" r="1.8" />
+              <circle cx="50" cy="92" r="1.8" />
+              <circle cx="8" cy="50" r="1.8" />
+              <circle cx="92" cy="50" r="1.8" />
+              <circle cx="20" cy="20" r="1.4" />
+              <circle cx="80" cy="20" r="1.4" />
+              <circle cx="20" cy="80" r="1.4" />
+              <circle cx="80" cy="80" r="1.4" />
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="click-hint" id="click-hint" aria-hidden="true">
+      <div class="hint-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <span>დააკლიკე რომ გახსნა</span>
+    </div>
+  </div>
+
+  <!-- INVITATION CARD -->
+  <div id="invitation-card" aria-live="polite">
+    <div class="card-inner">
+      <div class="card-panel" id="card-panel">
+
+        <header class="card-header animate-in">
+          <p class="header-tagline">ჩვენი სიყვარულის დღე</p>
+          <h3 class="couple-names">
+            <span class="name-gold">ქრისტინე</span>
+            <span class="ampersand"> &amp; </span>
+            <span class="name-gold">ლაშა</span>
+          </h3>
+          <div class="ornament">
+            <div class="ornament-line"></div>
+            <div class="ornament-icon">&#10022;</div>
+            <div class="ornament-line right"></div>
+          </div>
+        </header>
+
+        <div class="picture-section animate-in">
+          <div class="picture-frame">
+            <div class="frame-corner top-left"></div>
+            <div class="frame-corner top-right"></div>
+            <div class="frame-corner bottom-left"></div>
+            <div class="frame-corner bottom-right"></div>
+            <div class="picture-frame-inner">
+              <img src="picture.png" alt="ქრისტინე და ლაშა" />
+            </div>
+          </div>
+        </div>
+
+        <main class="card-body">
+          <div class="intro-section animate-in">
+            <div class="intro-ornament">
+              <span class="line"></span>
+              <span class="symbol">&#10087;</span>
+              <span class="line"></span>
+            </div>
+            <p class="intro-text">
+              მოხარულები ვართ, რომ ჩვენი ცხოვრების ყველაზე განსაკუთრებულ დღეს<br />
+              იქნებით ჩვენთან ერთად
+            </p>
+            <div class="intro-ornament">
+              <span class="line"></span>
+              <span class="symbol">&#10087;</span>
+              <span class="line"></span>
+            </div>
+          </div>
+
+          <section class="guest-message-section animate-in">
+            <div class="message-ornament">&#10022;</div>
+            <h3 class="message-title">ძვირფასო სტუმრებო</h3>
+            <p class="message-text">
+              ჩვენი სიყვარულის ისტორიის ყველაზე ლამაზ დღეს თქვენთან ერთად გაზიარება ჩვენთვის უდიდესი
+              ბედნიერებაა.<br /><br />
+              თქვენი სითბო, ღიმილი და სიყვარული ამ განსაკუთრებულ დღეს კიდევ უფრო ნათელს გახდის.<br /><br />
+              გელოდებით, რათა ერთად შევქმნათ მოგონებები, რომლებიც მთელი ცხოვრება ჩვენს გულებში დარჩება.
+            </p>
+          </section>
+
+          <div class="details-grid animate-in">
+            <div class="detail-block">
+              <div class="detail-icon">&#128197;</div>
+              <div class="detail-label">თარიღი</div>
+              <div class="detail-value">სამშაბათი<br />11 აგვისტო, 2026წ</div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-icon">&#128339;</div>
+              <div class="detail-label">დრო</div>
+              <div class="detail-sub">ცერემონია იწყება</div>
+              <div class="detail-value">18:00 საათზე</div>
+            </div>
+            <div class="detail-block">
+              <div class="detail-icon">&#128205;</div>
+              <div class="detail-label">ლოკაცია</div>
+              <div class="detail-value">რესტორანი სამეფო</div>
+              <div class="detail-sub">ფოთი, აღმაშენებლის №40</div>
+            </div>
+          </div>
+
+          <div class="animate-in">
+            <a id="btn-save-date" class="btn-save-date"
+              href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20241026T160000%0ADTEND:20241026T230000%0ASUMMARY:Anna%20%26%20George%20Wedding%0ALOCATION:The%20Garden%20Palace%2C%20Tbilisi%2C%20Georgia%0ADESCRIPTION:Wedding%20Celebration%0AEND:VEVENT%0AEND:VCALENDAR"
+              download="anna-george-wedding.ics">
+              <span>&#10022;</span>
+              კალენდარში მონიშვნა
+              <span>&#10022;</span>
+            </a>
+          </div>
+          <div class="petal-container" aria-hidden="true"></div>
+        </main>
+
+        <div class="floral-divider animate-in" aria-hidden="true">
+          <svg viewBox="0 0 340 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="20" x2="130" y2="20" stroke="currentColor" stroke-width="0.75" opacity="0.6" />
+            <g transform="translate(170,20)">
+              <circle r="3" fill="currentColor" />
+              <g opacity="0.7">
+                <ellipse rx="2" ry="8" transform="rotate(0)" fill="currentColor" />
+                <ellipse rx="2" ry="8" transform="rotate(60)" fill="currentColor" />
+                <ellipse rx="2" ry="8" transform="rotate(120)" fill="currentColor" />
+              </g>
+              <g opacity="0.4" transform="scale(1.6)">
+                <ellipse rx="1.5" ry="7" transform="rotate(30)" fill="currentColor" />
+                <ellipse rx="1.5" ry="7" transform="rotate(90)" fill="currentColor" />
+                <ellipse rx="1.5" ry="7" transform="rotate(150)" fill="currentColor" />
+              </g>
+              <circle r="2" fill="white" />
+              <circle r="1.2" fill="currentColor" />
+              <circle cx="-18" cy="0" r="1.5" fill="currentColor" opacity="0.5" />
+              <circle cx="18" cy="0" r="1.5" fill="currentColor" opacity="0.5" />
+              <circle cx="-30" cy="0" r="1" fill="currentColor" opacity="0.3" />
+              <circle cx="30" cy="0" r="1" fill="currentColor" opacity="0.3" />
+            </g>
+            <line x1="210" y1="20" x2="340" y2="20" stroke="currentColor" stroke-width="0.75" opacity="0.6" />
+          </svg>
+        </div>
+
+        <section class="location-section animate-in" id="location" aria-labelledby="location-heading">
+          <h2 class="location-title" id="location-heading">ლოკაცია</h2>
+          <p class="location-subtitle">ფოთი, აღმაშენებლის №40</p>
+          <div class="map-container">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2958.0590911652225!2d41.66009319999999!3d42.1490223!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x405db8f04b1eb663%3A0x8e1521596aa4e955!2z4YOh4YOQ4YOb4YOU4YOk4YOd!5e0!3m2!1ska!2sge!4v1785098389409!5m2!1ska!2sge"
+              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <a href="https://maps.app.goo.gl/1SrcDrMvHJVx1UNJ6" target="_blank" class="btn-map">
+            რუკაზე გახსნა
+          </a>
+        </section>
+
+        <footer class="card-footer animate-in">
+          <div class="ornament" style="margin-bottom:28px">
+            <div class="ornament-line"></div>
+            <div class="ornament-icon">&#10022;</div>
+            <div class="ornament-line right"></div>
+          </div>
+          <p class="footer-verse">
+            "ნამდვილი ბედნიერება იქ იწყება,<br />
+            სადაც ორი გული ერთმანეთს პოულობს<br />
+            და ერთად აგრძელებს ცხოვრების გზას."
+          </p>
+          <div style="height:20px"></div>
+          <p class="footer-names">ქრისტინე &amp; ლაშა</p><br>
+          <hr>
+          <p
+            style="font-family:'Jost',sans-serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-light);margin-top:16px;text-transform:uppercase">
+            11 აგვისტო, 2026 &middot; ფოთი, საქართველო</p>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator" id="scroll-indicator" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="scroll-arrow"></div>
+  </div>
+
+  <script>
+    var opened = false;
+    var envelopeScene = document.getElementById('envelope-scene');
+    var envelopeWrapper = document.getElementById('envelope-wrapper');
+    var envFlap = document.getElementById('env-flap');
+    var waxSeal = document.getElementById('wax-seal');
+    var clickHint = document.getElementById('click-hint');
+    var invitationCard = document.getElementById('invitation-card');
+    var cardPanel = document.getElementById('card-panel');
+    var scrollIndicator = document.getElementById('scroll-indicator');
+    var animateInEls = document.querySelectorAll('.animate-in');
+
+    // Entrance
+    gsap.set(envelopeWrapper, { opacity: 0, y: 40, scale: 0.9 });
+    gsap.set(clickHint, { opacity: 0, y: 10 });
+    gsap.timeline({ delay: 0.4 })
+      .to(envelopeWrapper, { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: 'expo.out' })
+      .to(waxSeal, { scale: 1.08, duration: 0.25, ease: 'power2.out', yoyo: true, repeat: 1 }, '-=0.1')
+      .to(clickHint, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.3');
+
+    function createSparkle(x, y, color) {
+      var el = document.createElement('div');
+      el.className = 'sparkle';
+      var size = gsap.utils.random(4, 10);
+      el.style.cssText = 'left:' + x + 'px;top:' + y + 'px;width:' + size + 'px;height:' + size + 'px;background:' + color + ';border-radius:' + (Math.random() > 0.5 ? '50%' : '2px') + ';position:fixed;pointer-events:none;z-index:999;';
+      document.body.appendChild(el);
+      gsap.fromTo(el,
+        { opacity: 1, scale: 0, x: 0, y: 0 },
+        {
+          opacity: 0, scale: gsap.utils.random(0.5, 1.5),
+          x: gsap.utils.random(-120, 120), y: gsap.utils.random(-180, 60),
+          duration: gsap.utils.random(0.8, 1.6), ease: 'power2.out',
+          onComplete: function () { el.remove(); }
+        }
+      );
+    }
+
+    function burstSparkles(cx, cy) {
+      var colors = ['#c9a96e', '#e2c98a', '#e8c5b5', '#c9927a', '#faf6f0', '#a07840'];
+      for (var i = 0; i < 28; i++) {
+        (function (idx) {
+          setTimeout(function () {
+            createSparkle(
+              cx + gsap.utils.random(-30, 30),
+              cy + gsap.utils.random(-30, 30),
+              gsap.utils.random(colors)
+            );
+          }, idx * 30);
+        })(i);
+      }
+    }
+
+
+    function openEnvelope(e) {
+      if (opened) return;
+      opened = true;
+      var cx = (e && e.clientX) ? e.clientX : window.innerWidth / 2;
+      var cy = (e && e.clientY) ? e.clientY : window.innerHeight / 2;
+
+      document.removeEventListener('click', openEnvelope);
+      document.removeEventListener('keypress', openEnvelopeKey);
+
+      gsap.to(clickHint, { opacity: 0, y: -8, duration: 0.3, ease: 'power2.in' });
+      burstSparkles(cx, cy);
+
+      var tl = gsap.timeline({ defaults: { ease: 'power3.inOut' } });
+
+      tl.to(envelopeWrapper, { scale: 1.04, y: -6, duration: 0.35, ease: 'power2.out' });
+      tl.to(waxSeal, { scale: 0.7, opacity: 0, y: 10, duration: 0.4, ease: 'back.in(2)' }, '-=0.1');
+      tl.set(envFlap, { transformPerspective: 900, transformOrigin: 'top center' });
+      tl.to(envFlap, { rotationX: -175, duration: 0.9, ease: 'expo.inOut' }, '-=0.2');
+
+      tl.set(cardPanel, { yPercent: 100, scale: 0.65, opacity: 0 });
+      tl.set(invitationCard, { visibility: 'visible' });
+      tl.call(function () { invitationCard.classList.add('active'); });
+      tl.to(cardPanel, { yPercent: 0, scale: 0.85, opacity: 1, duration: 0.7, ease: 'expo.out' }, '-=0.2');
+      tl.call(function () { burstSparkles(window.innerWidth / 2, window.innerHeight / 2); });
+      tl.to(envelopeScene, {
+        opacity: 0, scale: 0.85, y: 40, duration: 0.55, ease: 'power2.in',
+        onComplete: function () { envelopeScene.style.display = 'none'; }
+      }, '-=0.3');
+      tl.to(cardPanel, { scale: 1, y: 0, duration: 0.8, ease: 'expo.out' }, '-=0.3');
+      tl.call(function () { document.body.classList.add('revealed'); });
+      tl.to(invitationCard, { opacity: 1, duration: 0.5, ease: 'power2.out' }, '<');
+      tl.to(animateInEls, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.12 }, '-=0.2');
+      tl.to(scrollIndicator, { opacity: 1, duration: 0.5 }, '-=0.2');
+
+      invitationCard.addEventListener('scroll', function () {
+        if (invitationCard.scrollTop > 60) {
+          gsap.to(scrollIndicator, { opacity: 0, duration: 0.3 });
+        }
+      }, { passive: true });
+    }
+
+    function openEnvelopeKey(e) {
+      if (e.key === 'Enter' || e.key === ' ') openEnvelope(e);
+    }
+
+    document.addEventListener('click', openEnvelope);
+    document.addEventListener('keypress', openEnvelopeKey);
+
+
+    // Parallax
+    var rafId;
+    document.addEventListener('mousemove', function (e) {
+      if (opened) return;
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(function () {
+        var dx = (e.clientX / window.innerWidth - 0.5) * 18;
+        var dy = (e.clientY / window.innerHeight - 0.5) * 12;
+        gsap.to(envelopeWrapper, { x: dx, y: dy, duration: 1.4, ease: 'power2.out', overwrite: 'auto' });
+      });
+    });
+
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', function (e) {
+        if (opened) return;
+        var tiltX = Math.max(-15, Math.min(15, e.gamma || 0));
+        var tiltY = Math.max(-15, Math.min(15, (e.beta - 45) || 0));
+        gsap.to(envelopeWrapper, { x: tiltX, y: tiltY / 2, duration: 1, ease: 'power2.out', overwrite: 'auto' });
+      }, { passive: true });
+    }
+  </script>
+</body>
+
+</html>
