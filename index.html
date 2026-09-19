@@ -4,8 +4,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ქრისტინე &amp; ლაშას — საქორწილო მოსაწვევი</title>
-  <meta name="description" <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <title>გვანცა &amp; გოგას — საქორწილო მოსაწვევი</title>
+  <meta name="description" content="გვანცა &amp; გოგას — საქორწილო მოსაწვევი">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap"
@@ -505,7 +506,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 32px 24px;
-      margin-bottom: 48px;
+      margin-bottom: 20px;
     }
 
     .detail-block:last-child:nth-child(odd) {
@@ -590,54 +591,89 @@
       color: var(--text-mid);
     }
 
-    .btn-save-date {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 16px 40px;
-      background: linear-gradient(135deg, var(--deep-green) 0%, var(--forest) 100%);
-      color: var(--gold-light);
-      font-family: 'Jost', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      border: none;
-      border-radius: 1px;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 8px 30px rgba(44, 74, 62, 0.3), 0 0 0 1px rgba(201, 169, 110, 0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
-      overflow: hidden;
+    /* Ceremony cards */
+    .ceremony-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 10px;
     }
 
-    .btn-save-date::before {
+    @media (max-width: 500px) {
+      .ceremony-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+      }
+    }
+
+    .ceremony-card {
+      background: rgba(201, 169, 110, 0.05);
+      border: 1px solid rgba(201, 169, 110, 0.25);
+      border-radius: 2px;
+      padding: 28px 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      position: relative;
+      text-align: center;
+    }
+
+    .ceremony-card::before {
       content: '';
       position: absolute;
-      inset: 1px;
-      border: 1px solid rgba(201, 169, 110, 0.25);
+      inset: 5px;
+      border: 1px solid rgba(201, 169, 110, 0.12);
       pointer-events: none;
     }
 
-    .btn-save-date::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
-      transition: left 0.5s ease;
+    .ceremony-time {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
     }
 
-    .btn-save-date:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 14px 40px rgba(44, 74, 62, 0.4), 0 0 0 1px rgba(201, 169, 110, 0.3);
+    .ceremony-icon {
+      font-size: 1.6rem;
+      line-height: 1;
     }
 
-    .btn-save-date:hover::after {
-      left: 100%;
+    .ceremony-place {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.4vw, 1.15rem);
+      font-weight: 500;
+      color: var(--deep-green);
+      line-height: 1.4;
+    }
+
+    .ceremony-detail {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(0.85rem, 1.9vw, 0.95rem);
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.6;
+    }
+
+    .ceremony-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 28px 0 18px;
+    }
+
+    .ceremony-divider .line {
+      height: 1px;
+      width: 60px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .ceremony-divider .symbol {
+      color: var(--gold);
+      font-size: 0.75rem;
+      opacity: 0.8;
     }
 
     /* Floral Divider */
@@ -975,7 +1011,7 @@
               <ellipse rx="4" ry="20" transform="rotate(135)" />
             </g>
             <text x="50" y="56" text-anchor="middle" font-family="serif" font-size="22" font-weight="700"
-              fill="rgba(255,220,170,0.9)" letter-spacing="1">ქꨄ︎ლ</text>
+              fill="rgba(255,220,170,0.9)" letter-spacing="1">გꨄ︎გ</text>
             <g fill="rgba(255,200,150,0.4)">
               <circle cx="50" cy="8" r="1.8" />
               <circle cx="50" cy="92" r="1.8" />
@@ -1008,9 +1044,9 @@
         <header class="card-header animate-in">
           <p class="header-tagline">ჩვენი სიყვარულის დღე</p>
           <h3 class="couple-names">
-            <span class="name-gold">ქრისტინე</span>
+            <span class="name-gold">გვანცა</span>
             <span class="ampersand"> &amp; </span>
-            <span class="name-gold">ლაშა</span>
+            <span class="name-gold">გოგა</span>
           </h3>
           <div class="ornament">
             <div class="ornament-line"></div>
@@ -1026,7 +1062,7 @@
             <div class="frame-corner bottom-left"></div>
             <div class="frame-corner bottom-right"></div>
             <div class="picture-frame-inner">
-              <img src="picture.png" alt="ქრისტინე და ლაშა" />
+              <img src="picture.png" alt="გვანცა და გოგა" />
             </div>
           </div>
         </div>
@@ -1060,36 +1096,42 @@
             </p>
           </section>
 
+          <!-- UPDATED DATE AND CEREMONY INFO -->
           <div class="details-grid animate-in">
             <div class="detail-block">
               <div class="detail-icon">&#128197;</div>
               <div class="detail-label">თარიღი</div>
-              <div class="detail-value">სამშაბათი<br />11 აგვისტო, 2026წ</div>
+              <div class="detail-value">28 სექტემბერი, 2026წ</div>
             </div>
             <div class="detail-block">
               <div class="detail-icon">&#128339;</div>
               <div class="detail-label">დრო</div>
               <div class="detail-sub">ცერემონია იწყება</div>
-              <div class="detail-value">18:00 საათზე</div>
-            </div>
-            <div class="detail-block">
-              <div class="detail-icon">&#128205;</div>
-              <div class="detail-label">ლოკაცია</div>
-              <div class="detail-value">რესტორანი სამეფო</div>
-              <div class="detail-sub">ფოთი, აღმაშენებლის №40</div>
+              <div class="detail-value">12:00 საათზე</div>
             </div>
           </div>
 
-          <div class="animate-in">
-            <a id="btn-save-date" class="btn-save-date"
-              href="data:text/calendar;charset=utf8,BEGIN:VCALENDAR%0AVERSION:2.0%0ABEGIN:VEVENT%0ADTSTART:20241026T160000%0ADTEND:20241026T230000%0ASUMMARY:Anna%20%26%20George%20Wedding%0ALOCATION:The%20Garden%20Palace%2C%20Tbilisi%2C%20Georgia%0ADESCRIPTION:Wedding%20Celebration%0AEND:VEVENT%0AEND:VCALENDAR"
-              download="anna-george-wedding.ics">
-              <span>&#10022;</span>
-              კალენდარში მონიშვნა
-              <span>&#10022;</span>
-            </a>
+          <div class="ceremony-divider animate-in">
+            <span class="line"></span>
+            <span class="symbol">&#10022;</span>
+            <span class="line"></span>
           </div>
-          <div class="petal-container" aria-hidden="true"></div>
+
+          <div class="ceremony-grid animate-in">
+            <div class="ceremony-card">
+              <div class="ceremony-icon">&#128332;</div>
+              <div class="ceremony-time">12:00 საათი</div>
+              <div class="ceremony-place">ქუთაისი, მოწამეთა</div>
+              <div class="ceremony-detail">ჯვრის წერის ცერემონია</div>
+            </div>
+            <div class="ceremony-card">
+              <div class="ceremony-icon">&#127869;</div>
+              <div class="ceremony-time">18:00 საათი</div>
+              <div class="ceremony-place">ზუგდიდი, რესტორანი ბაგრატიონი</div>
+              <div class="ceremony-detail">საქორწილო სუფრა</div>
+            </div>
+          </div>
+
         </main>
 
         <div class="floral-divider animate-in" aria-hidden="true">
@@ -1120,36 +1162,14 @@
 
         <section class="location-section animate-in" id="location" aria-labelledby="location-heading">
           <h2 class="location-title" id="location-heading">ლოკაცია</h2>
-          <p class="location-subtitle">ფოთი, აღმაშენებლის №40</p>
+          <p class="location-subtitle">ზუგდიდი, რესტორანი ბაგრატიონი</p>
           <div class="map-container">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2958.0590911652225!2d41.66009319999999!3d42.1490223!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x405db8f04b1eb663%3A0x8e1521596aa4e955!2z4YOh4YOQ4YOb4YOU4YOk4YOd!5e0!3m2!1ska!2sge!4v1785098389409!5m2!1ska!2sge"
-              width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d188313.71038172394!2d41.84312764154203!3d42.48301141905948!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x405c25004230b22d%3A0x9e8320eb32783fed!2z4YOg4YOU4YOh4YOi4YOd4YOg4YOQ4YOc4YOYIOGDkeGDkOGDkuGDoOGDkOGDouGDmOGDneGDnOGDmCAtIFJlc3RhdXJhbnQgQmFncmF0aW9uaQ!5e0!3m2!1ska!2sge!4v1789807875102!5m2!1ska!2sge" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
           </div>
-          <a href="https://maps.app.goo.gl/1SrcDrMvHJVx1UNJ6" target="_blank" class="btn-map">
+          <a href="https://maps.app.goo.gl/Di6K4VcxQfe5WGL29" target="_blank" class="btn-map">
             რუკაზე გახსნა
           </a>
         </section>
-
-        <footer class="card-footer animate-in">
-          <div class="ornament" style="margin-bottom:28px">
-            <div class="ornament-line"></div>
-            <div class="ornament-icon">&#10022;</div>
-            <div class="ornament-line right"></div>
-          </div>
-          <p class="footer-verse">
-            "ნამდვილი ბედნიერება იქ იწყება,<br />
-            სადაც ორი გული ერთმანეთს პოულობს<br />
-            და ერთად აგრძელებს ცხოვრების გზას."
-          </p>
-          <div style="height:20px"></div>
-          <p class="footer-names">ქრისტინე &amp; ლაშა</p><br>
-          <hr>
-          <p
-            style="font-family:'Jost',sans-serif;font-size:0.7rem;letter-spacing:0.15em;color:var(--text-light);margin-top:16px;text-transform:uppercase">
-            11 აგვისტო, 2026 &middot; ფოთი, საქართველო</p>
-        </footer>
 
       </div>
     </div>
@@ -1212,7 +1232,6 @@
       }
     }
 
-
     function openEnvelope(e) {
       if (opened) return;
       opened = true;
@@ -1260,7 +1279,6 @@
 
     document.addEventListener('click', openEnvelope);
     document.addEventListener('keypress', openEnvelopeKey);
-
 
     // Parallax
     var rafId;
